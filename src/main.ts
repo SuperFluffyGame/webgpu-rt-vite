@@ -39,6 +39,7 @@ import {
     otherBindGroupLayout,
 } from "./bindGroups/otherBindings.js";
 import { options } from "./data.js";
+import { mat4 } from "gl-matrix";
 
 const pipelineLayout = device.createPipelineLayout({
     bindGroupLayouts: [
@@ -99,8 +100,8 @@ new Float32Array(screenUVbuffer.getMappedRange()).set(screenUV);
 screenUVbuffer.unmap();
 
 // create output texture
-const renderOutputTexture = device.createTexture({
-    size: [canvas.width, canvas.height],
+let renderOutputTexture = device.createTexture({
+    size: [options.width, options.height],
     format: colorTarget,
     usage: GPUTextureUsage.RENDER_ATTACHMENT,
     sampleCount: 4,
@@ -122,7 +123,9 @@ function render(_time: number) {
         ],
     });
     const translationMatrix = getTranslationMatrix();
+    mat4.transpose(translationMatrix, translationMatrix);
     const rotationMatrix = getRotationMatrix();
+    mat4.transpose(rotationMatrix, rotationMatrix);
 
     //group 1
     device.queue.writeBuffer(cameraPosMatBuffer, 0, translationMatrix);
@@ -165,3 +168,16 @@ function render(_time: number) {
     device.queue.submit([commandEncoder.finish()]);
 }
 requestAnimationFrame(render);
+
+window.addEventListener("resize", () => {
+    options.width = canvas.width = window.innerWidth;
+    options.height = canvas.height = window.innerHeight;
+
+    renderOutputTexture.destroy();
+    renderOutputTexture = device.createTexture({
+        size: [options.width, options.height],
+        format: colorTarget,
+        usage: GPUTextureUsage.RENDER_ATTACHMENT,
+        sampleCount: 4,
+    });
+});

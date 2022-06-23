@@ -1,4 +1,10 @@
-import { options } from "./data.js";
+import { mat4, vec4 } from "gl-matrix";
+import {
+    createSphere,
+    getTranslationMatrix,
+    options,
+    getRotationMatrix,
+} from "./data.js";
 
 const canvas = document.getElementById("c") as HTMLCanvasElement;
 // document.body.onclick = e => {
@@ -38,4 +44,15 @@ document.addEventListener("keydown", e => {
 document.addEventListener("keyup", e => {
     const key = e.code;
     pressedKeys[key] = false;
+});
+
+document.addEventListener("keypress", e => {
+    if (e.code == "KeyR") {
+        const vec = vec4.fromValues(0, 0, -4, 1);
+        vec4.transformMat4(vec, vec, getRotationMatrix());
+        vec4.transformMat4(vec, vec, getTranslationMatrix());
+
+        // vec4.transformMat4(vec, vec, getRotationMatrix());
+        createSphere(vec[0], vec[1], vec[2], 1);
+    }
 });

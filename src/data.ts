@@ -17,14 +17,12 @@ export function getRotationMatrix() {
     mat4.rotateY(mat, mat, -rotation[0]);
     mat4.rotateX(mat, mat, -rotation[1]);
     // mat4.rotate(mat, mat, 1, [rotation[0], rotation[1], 1]);
-    mat4.transpose(mat, mat);
     return mat as Float32Array;
 }
 
 export function getTranslationMatrix() {
     const mat = mat4.create();
     mat4.translate(mat, mat, camera);
-    mat4.transpose(mat, mat);
     return mat as Float32Array;
 }
 
@@ -45,10 +43,20 @@ export const screenUV = new Float32Array([
 ]);
 
 //prettier-ignore
-export const sphereData = new Float32Array([
-//  x, y, z, w,  r,    padding
-    2, 0, 0, 1,  1,    0, 0, 0,
-    0, 2, 0, 1,  1,    0, 0, 0
+export let sphereData = new Float32Array(16)
+
+sphereData.set([
+    //  x, y, z, w,  r,    padding
+    2, 0, 0, 1, 1, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 0,
 ]);
 export const sphereCount = new Float32Array([2]);
 export const lightPos = new Float32Array([3, -6, 0, 1]);
+
+export function createSphere(x: number, y: number, z: number, r: number) {
+    const oldSphereData = sphereData;
+    sphereData = new Float32Array((sphereCount[0] + 1) * 8);
+    sphereData.set(oldSphereData);
+
+    sphereData.set([x, y, z, 1, r, 0, 0, 0], sphereCount[0] * 8);
+    sphereCount[0]++;
+}

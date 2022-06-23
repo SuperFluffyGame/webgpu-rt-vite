@@ -15,7 +15,7 @@ export const fovBuffer = device.createBuffer({
 
 export const sphereBuffer = device.createBuffer({
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-    size: 32 * 2,
+    size: 32 * 256,
 });
 export const sphereCountBuffer = device.createBuffer({
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,

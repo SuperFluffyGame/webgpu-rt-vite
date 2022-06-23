@@ -1,4 +1,9 @@
-import { options } from "./data.js";
+import { options } from "./options.js";
+export { options };
+
+export const optionsPanelWidth = 300;
+options.fov = (options.fov * Math.PI) / 180;
+options.width -= optionsPanelWidth;
 
 // get shader files
 export const raytraceVertShaderCode = await (
@@ -19,6 +24,7 @@ export const device = await adapter.requestDevice();
 export const colorTarget: GPUTextureFormat = "rgba8unorm";
 
 export const canvas = document.getElementById("c") as HTMLCanvasElement;
+
 canvas.width = options.width;
 canvas.height = options.height;
 export const context = canvas.getContext("webgpu") as GPUCanvasContext;

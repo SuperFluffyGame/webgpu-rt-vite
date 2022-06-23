@@ -5,41 +5,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Hi</title>
         <script src="./src/main.ts" defer type="module"></script>
-        <style>
-            * {
-                padding: 0;
-                margin: 0;
-                width: 100%;
-                height: 100%;
-            }
-            #wrapper {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            canvas {
-                display: block;
-            }
-            #mid_box {
-                background-color: red;
-                width: 8px;
-                height: 8px;
-            }
-            #mid_box_wrapper {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                position: absolute;
-                top: 0;
-            }
-        </style>
+        <link rel="stylesheet" href="./src/style.css" />
     </head>
     <body>
         <div id="wrapper">
-            <canvas id="c" width="600" height="600"></canvas>
-        </div>
-        <div id="mid_box_wrapper">
-            <div id="mid_box"></div>
+            <div id="canvas-wrapper">
+                <canvas id="c"></canvas>
+                <div id="crosshair-wrapper">
+                    <div id="crosshair"></div>
+                </div>
+            </div>
+            <div id="options">
+                <div id="options-title">
+                    <button id="option-tab">+</button>
+                    <h1>Options</h1>
+                </div>
+
+                <div class="option">
+                    <p class="option-name">FOV:</p>
+                    <p id="fov-display" class="option-display">90°</p>
+                    <input
+                        id="fov"
+                        type="range"
+                        min="30"
+                        max="120"
+                        value="90"
+                    />
+                </div>
+
+                <div class="option">
+                    <p class="option-name">FOV:</p>
+                    <p id="fov-display" class="option-display">90°</p>
+                    <input
+                        id="fov"
+                        type="range"
+                        min="30"
+                        max="120"
+                        value="90"
+                    />
+                </div>
+            </div>
         </div>
     </body>
 </html>

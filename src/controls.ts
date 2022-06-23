@@ -1,9 +1,5 @@
 import { pressedKeys, mouse } from "./inputs.js";
 
-document.onclick = _e => {
-    document.body.requestPointerLock();
-};
-
 export const camera = new Float32Array(3);
 export const rotation = new Float32Array(2);
 

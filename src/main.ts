@@ -14,6 +14,7 @@ import {
     colorTarget,
     canvas,
     context,
+    optionsPanelWidth,
 } from "./init.js";
 import {
     canvasSizeBuffer,
@@ -38,7 +39,7 @@ import {
     otherBindGroup,
     otherBindGroupLayout,
 } from "./bindGroups/otherBindings.js";
-import { options } from "./data.js";
+import { options } from "./init.js";
 import { mat4 } from "gl-matrix";
 
 const pipelineLayout = device.createPipelineLayout({
@@ -170,7 +171,7 @@ function render(_time: number) {
 requestAnimationFrame(render);
 
 window.addEventListener("resize", () => {
-    options.width = canvas.width = window.innerWidth;
+    options.width = canvas.width = window.innerWidth - optionsPanelWidth;
     options.height = canvas.height = window.innerHeight;
 
     renderOutputTexture.destroy();

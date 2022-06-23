@@ -2,19 +2,17 @@ import { mat4, vec4 } from "gl-matrix";
 import {
     createSphere,
     getTranslationMatrix,
-    options,
     getRotationMatrix,
 } from "./data.js";
-
-const canvas = document.getElementById("c") as HTMLCanvasElement;
-// document.body.onclick = e => {
-//     canvas.requestPointerLock();
-// };
+import { options, canvas } from "./init.js";
 
 //mouse
 export const mouse = { x: 0, y: 0 };
 export const mouseOffset = { x: 0, y: 0 };
 document.addEventListener("mousemove", e => {
+    if (!inPointerLock) {
+        return;
+    }
     // mouse.x = e.x / (canvas.width / 2) - 1;
     // mouse.y = -e.y / (canvas.height / 2) + 1;
 
@@ -55,4 +53,13 @@ document.addEventListener("keypress", e => {
         // vec4.transformMat4(vec, vec, getRotationMatrix());
         createSphere(vec[0], vec[1], vec[2], 1);
     }
+});
+
+export let inPointerLock = false;
+canvas.parentElement!.addEventListener("click", e => {
+    document.body.requestPointerLock();
+});
+
+document.addEventListener("pointerlockchange", e => {
+    inPointerLock = !inPointerLock;
 });

@@ -1,17 +1,6 @@
 import { mat4 } from "gl-matrix";
 import { rotation, camera } from "./controls.js";
 
-export const options = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fov: 75,
-    rayBounces: 0,
-    verticalMouseSensitivity: 1,
-    horizontalMouseSensitivity: 1,
-    multiSample: false,
-};
-options.fov = (options.fov * Math.PI) / 180;
-
 export function getRotationMatrix() {
     const mat = mat4.create();
     mat4.rotateY(mat, mat, -rotation[0]);

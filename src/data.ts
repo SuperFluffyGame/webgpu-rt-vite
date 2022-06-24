@@ -25,11 +25,6 @@ export const screenGeo = new Float32Array([
      1, -1, 0, 1, 
      1,  1, 0, 1,
 ]);
-export const screenUV = new Float32Array([
-    0, 0, 0, 1, 1, 1,
-
-    0, 0, 1, 0, 1, 1,
-]);
 
 //prettier-ignore
 export let sphereData = new Float32Array(16)

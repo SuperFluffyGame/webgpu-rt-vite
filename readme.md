@@ -7,3 +7,5 @@ A simple raytracer, in the expiremental WebGPU API
 2. Multi Object Light Collision
 3. Reflections
 4. Multisampling
+5. Optimization
+    - View Culling

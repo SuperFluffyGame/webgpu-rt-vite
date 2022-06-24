@@ -3,18 +3,16 @@ import {
     getTranslationMatrix,
     lightPos,
     screenGeo,
-    screenUV,
     sphereCount,
     sphereData,
 } from "./data.js";
 import {
     device,
-    basicFragShaderCode,
-    raytraceVertShaderCode,
+    basicVertShaderCode,
+    raytraceFragShaderCode,
     colorTarget,
     canvas,
     context,
-    optionsPanelWidth,
 } from "./init.js";
 import {
     canvasSizeBuffer,
@@ -54,7 +52,7 @@ const pipeline = device.createRenderPipeline({
     layout: pipelineLayout,
     vertex: {
         module: device.createShaderModule({
-            code: raytraceVertShaderCode,
+            code: basicVertShaderCode,
         }),
         entryPoint: "main",
         buffers: [
@@ -73,7 +71,7 @@ const pipeline = device.createRenderPipeline({
     },
     fragment: {
         module: device.createShaderModule({
-            code: basicFragShaderCode,
+            code: raytraceFragShaderCode,
         }),
         entryPoint: "main",
         targets: [{ format: colorTarget }],
@@ -91,14 +89,6 @@ const screenGeoBuffer = device.createBuffer({
 });
 new Float32Array(screenGeoBuffer.getMappedRange()).set(screenGeo);
 screenGeoBuffer.unmap();
-
-const screenUVbuffer = device.createBuffer({
-    size: screenUV.byteLength,
-    usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
-    mappedAtCreation: true,
-});
-new Float32Array(screenUVbuffer.getMappedRange()).set(screenUV);
-screenUVbuffer.unmap();
 
 // create output texture
 let renderOutputTexture = device.createTexture({
@@ -171,7 +161,7 @@ function render(_time: number) {
 requestAnimationFrame(render);
 
 window.addEventListener("resize", () => {
-    options.width = canvas.width = window.innerWidth - optionsPanelWidth;
+    options.width = canvas.width = window.innerWidth;
     options.height = canvas.height = window.innerHeight;
 
     renderOutputTexture.destroy();

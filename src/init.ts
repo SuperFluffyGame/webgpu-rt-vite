@@ -1,17 +1,9 @@
 import { options } from "./options.js";
 export { options };
 
-export const optionsPanelWidth = 300;
-options.fov = (options.fov * Math.PI) / 180;
-options.width -= optionsPanelWidth;
-
-// get shader files
-export const raytraceVertShaderCode = await (
-    await fetch("./src/shaders/basic.vert.wgsl")
-).text();
-export const basicFragShaderCode = await (
-    await fetch("./src/shaders/raytrace.frag.wgsl")
-).text();
+import basicVertShaderCode from "./shaders/basic.vert.wgsl?raw";
+import raytraceFragShaderCode from "./shaders/raytrace.frag.wgsl?raw";
+export { basicVertShaderCode, raytraceFragShaderCode };
 
 // check if webgpu is enabled
 if (!navigator.gpu) {

@@ -51,7 +51,7 @@ document.addEventListener("keypress", e => {
         vec4.transformMat4(vec, vec, getTranslationMatrix());
 
         // vec4.transformMat4(vec, vec, getRotationMatrix());
-        createSphere(vec[0], vec[1], vec[2], 1);
+        createSphere(vec[0], vec[1], vec[2], random(0.2, 1));
     }
 });
 
@@ -63,3 +63,7 @@ canvas.parentElement!.addEventListener("click", e => {
 document.addEventListener("pointerlockchange", e => {
     inPointerLock = !inPointerLock;
 });
+
+function random(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+}

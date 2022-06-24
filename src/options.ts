@@ -1,3 +1,7 @@
+import { canvas } from "./init";
+export const optionTab = document.getElementById("options-tab")!;
+export const optionPanel = document.getElementById("options")!;
+
 export const options = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -6,7 +10,14 @@ export const options = {
     verticalMouseSensitivity: 1,
     horizontalMouseSensitivity: 1,
     multiSample: false,
+    optionPanelWidth: 300,
 };
+options.fov = (options.fov * Math.PI) / 180;
+
+optionTab.addEventListener("click", e => {
+    console.log("click");
+    optionPanel.style.left = "" + options.optionPanelWidth;
+});
 
 const fovSlider = document.getElementById("fov") as HTMLInputElement;
 const fovDisplay = document.getElementById(

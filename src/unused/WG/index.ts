@@ -43,7 +43,7 @@ export class Renderer {
         group: number,
         slot: number,
         size: number,
-        visibility: GPUShaderStage,
+        visibility: number,
         usage: GPUBufferUsageFlags = GPUBufferUsage.UNIFORM |
             GPUBufferUsage.COPY_DST
     ) {

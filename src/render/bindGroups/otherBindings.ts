@@ -1,14 +1,14 @@
-import { device } from "../init.js";
+import { device } from "../../init.js";
 import {
-    cameraPosMatBuffer,
-    cameraRotMatBuffer,
-    fovBuffer,
-} from "../buffers.js";
+    canvasSizeBuffer,
+    rayBouncesBuffer,
+    multiSampleBuffer,
+} from "../../buffers.js";
 
-// binding 1: cameraPosMatBuffer
-// binding 2: cameraRotMatBuffer
-// binding 3: fovBuffer
-export const cameraBindGroupLayout = device.createBindGroupLayout({
+// binding 1: canvasSizeBuffer
+// binding 2: rayBouncesBuffer
+// binding 3: multiSampleBuffer
+export const otherBindGroupLayout = device.createBindGroupLayout({
     entries: [
         {
             binding: 0,
@@ -34,25 +34,25 @@ export const cameraBindGroupLayout = device.createBindGroupLayout({
     ],
 });
 
-export const cameraBindGroup = device.createBindGroup({
-    layout: cameraBindGroupLayout,
+export const otherBindGroup = device.createBindGroup({
+    layout: otherBindGroupLayout,
     entries: [
         {
             binding: 0,
             resource: {
-                buffer: cameraPosMatBuffer,
+                buffer: canvasSizeBuffer,
             },
         },
         {
             binding: 1,
             resource: {
-                buffer: cameraRotMatBuffer,
+                buffer: rayBouncesBuffer,
             },
         },
         {
             binding: 2,
             resource: {
-                buffer: fovBuffer,
+                buffer: multiSampleBuffer,
             },
         },
     ],

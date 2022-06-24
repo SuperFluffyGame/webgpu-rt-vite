@@ -28,15 +28,15 @@ import {
 import {
     cameraBindGroup,
     cameraBindGroupLayout,
-} from "./bindGroups/cameraBindings.js";
+} from "./render/bindGroups/cameraBindings.js";
 import {
     objectBindGroup,
     objectBindGroupLayout,
-} from "./bindGroups/objectBindings.js";
+} from "./render/bindGroups/objectBindings.js";
 import {
     otherBindGroup,
     otherBindGroupLayout,
-} from "./bindGroups/otherBindings.js";
+} from "./render/bindGroups/otherBindings.js";
 import { options } from "./init.js";
 import { mat4 } from "gl-matrix";
 

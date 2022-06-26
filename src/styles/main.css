@@ -30,29 +30,25 @@ html {
 #options {
     background-color: #2225;
 
-    position: relative;
-    width: 300px;
-    left: 0;
+    position: absolute;
+    width: min(300px, auto);
+    right: 0;
     transition: left 0.5s ease-in-out 0.1s;
     /* display: flex; */
 }
 
-#options-title {
+#options-header {
     position: relative;
     display: flex;
     justify-content: center;
-    border-bottom: #333 solid 5px;
+    border-bottom: #1a1a1a55 solid 5px;
 }
 
-.option {
-    display: flex;
-    padding-left: 10px;
-    padding-block: 10px;
-}
-
-.option-name,
-.option-display {
-    padding-right: 10px;
+#options-body {
+    padding: 0.25em;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 0.5em;
 }
 
 #crosshair {

@@ -1,4 +1,4 @@
-import { mat4, vec4 } from "gl-matrix";
+import { vec4 } from "gl-matrix";
 import {
     createSphere,
     getTranslationMatrix,
@@ -18,7 +18,7 @@ document.addEventListener("mousemove", e => {
 
     mouse.x +=
         (e.movementX / (canvas.width / 2)) *
-        (options.horizontalMouseSensitivity * 2);
+        (options.horizontalMouseSensitivity * (options.width / options.height));
     mouse.y +=
         (-e.movementY / (canvas.height / 2)) * options.verticalMouseSensitivity;
 

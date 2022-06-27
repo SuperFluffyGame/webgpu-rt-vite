@@ -3,24 +3,33 @@ struct Sphere {
     radius: f32,
     //3xf32 padding
 }
+struct Light {
+    pos: vec4<f32>,
+    color: vec3<f32>,
+    intensity: f32,
+}
+struct Options {
+    canvas_size: vec2<f32>,
+    sphere_count: f32,
+    ray_bounces: f32,
+    multi_sample: f32,
+}
 struct FragOutput {
     @location(0) color: vec4<f32>
 }
 
-//camera bindings
-@group(0) @binding(0) var<uniform> camera_pos_mat: mat4x4<f32>;
-@group(0) @binding(1) var<uniform> camera_rot_mat: mat4x4<f32>;
-@group(0) @binding(2) var<uniform> camera_fov: f32;
+struct Camera {
+    pos_mat: mat4x4<f32>,
+    dir_mat: mat4x4<f32>,
+    fov: f32,
+}
 
-//object bindings
-@group(1) @binding(0) var<uniform> spheres_count: f32;
-@group(1) @binding(1) var<storage> spheres: array<Sphere>;
-@group(1) @binding(2) var<uniform> light_pos: vec4<f32>;
+@group(0) @binding(0) var<uniform> camera: Camera;
+@group(0) @binding(1) var<storage> spheres: array<Sphere>;
+@group(0) @binding(2) var<storage> lights: array<Light>;
+@group(0) @binding(3) var<uniform> options: Options;
 
-// other bindings
-@group(2) @binding(0) var<uniform> canvas_size: vec2<f32>;
-@group(2) @binding(1) var<uniform> ray_bounces: f32;
-@group(2) @binding(2) var<uniform> mult_sample: f32;
+
 
 fn ray_sphere_hit(ray_origin: vec4<f32>, ray_dir: vec4<f32>, sphere_origin: vec4<f32>, sphere_radius: f32) -> f32{
     var a = pow(ray_dir.x, 2) + pow(ray_dir.y, 2) + pow(ray_dir.z, 2);
@@ -51,17 +60,17 @@ fn main(
     // let PI: f32 = 3.141592636;
     var out: FragOutput;
 
-    let min_size = min(canvas_size.x, canvas_size.y);
-    let new_pos = vec2<f32>((pos.x - canvas_size.x / 2.0) / (min_size / 2.0), 
-                            (pos.y - canvas_size.y / 2.0) / (min_size / 2.0));
+    let min_size = min(options.canvas_size.x, options.canvas_size.y);
+    let new_pos = vec2<f32>((pos.x - options.canvas_size.x / 2.0) / (min_size / 2.0), 
+                            (pos.y - options.canvas_size.y / 2.0) / (min_size / 2.0));
 
-    let ray_origin = vec4<f32>(0,0,0,1) * camera_pos_mat;
+    let ray_origin = vec4<f32>(0,0,0,1) * camera.pos_mat;
     var ray_dir = normalize(
         vec4<f32>(
             new_pos.x,
             new_pos.y,
-            - (1 / tan(camera_fov / 2)), 1
-        ) * camera_rot_mat
+            - (1 / tan(camera.fov / 2)), 1
+        ) * camera.dir_mat
     );
 
     let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);
@@ -69,11 +78,12 @@ fn main(
     let sphere_color = vec4<f32>(0.8,1,0,1);
     let sky_color = mix(sky_color1, sky_color2, 1 -ray_dir.y);
 
+    let light_pos = lights[0].pos;
 
     var closest_sphere_index: f32 = -1;
     var closest_sphere_t: f32 = 100000;
 
-    for (var i = 0; i < i32(spheres_count); i++) {
+    for (var i = 0; i < i32(options.sphere_count); i++) {
         var sphere = spheres[i];
 
         var t = ray_sphere_hit(ray_origin, ray_dir, sphere.pos, sphere.radius);
@@ -83,7 +93,7 @@ fn main(
         }
     }
 
-    if(closest_sphere_index >= 0 && closest_sphere_index < spheres_count && closest_sphere_t > 0){
+    if(closest_sphere_index >= 0 && closest_sphere_index < options.sphere_count && closest_sphere_t > 0){
         let sphere = spheres[i32(closest_sphere_index)];
         let hit_point = ray_origin + ray_dir * closest_sphere_t;
         let normal = (hit_point - sphere.pos);

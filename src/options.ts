@@ -1,6 +1,3 @@
-import { canvas } from "./init";
-export const optionPanel = document.getElementById("options")!;
-
 export const options = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -12,6 +9,8 @@ export const options = {
     optionPanelWidth: 300,
 };
 options.fov = (options.fov * Math.PI) / 180;
+
+export const optionPanel = document.getElementById("options")!;
 
 const fovSlider = document.getElementById("fov") as HTMLInputElement;
 const fovDisplay = document.getElementById(
@@ -40,8 +39,8 @@ fovSlider.addEventListener("input", e => {
     setFOV(fov);
 });
 fovReset.addEventListener("click", e => {
-    fovSlider.value = "90";
-    setFOV(90);
+    fovSlider.value = "75";
+    setFOV(75);
 });
 
 vMouseSlider.addEventListener("input", e => {

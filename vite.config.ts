@@ -4,5 +4,5 @@ export default defineConfig({
         minify: "esbuild",
         target: "esnext",
     },
-    assetsInclude: ["**/**.wgsl"],
+    assetsInclude: ["**/*.wgsl"],
 });

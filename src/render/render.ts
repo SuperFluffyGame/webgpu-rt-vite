@@ -1,1 +1,134 @@
-export {};
+import { vec2, vec4 } from "gl-matrix";
+import { device, colorTarget, context, canvas } from "./init.js";
+import { options } from "../options.js";
+import {
+    screenGeo,
+    getSphereData,
+    getCameraData,
+    getLightData,
+    getOptionsData,
+} from "./data.js";
+import { getBindGroupData, bindGroupBuffers } from "./bindings.js";
+import { getPipeline } from "./pipeline.js";
+
+export interface Scene {
+    spheres: Sphere[];
+    lights: Light[];
+    camera: Camera;
+    multisample?: boolean;
+    rayBounces?: number;
+    canvasSize: vec2;
+}
+
+export interface Camera {
+    position: vec4;
+    direction: vec2;
+    fov: number;
+}
+
+export interface Sphere {
+    radius: number;
+    position: vec4;
+}
+
+export interface Light {
+    position: vec4;
+    color: vec4;
+    intensity: number;
+}
+
+const screenGeoBuffer = device.createBuffer({
+    size: screenGeo.byteLength,
+    usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+    mappedAtCreation: true,
+});
+new Float32Array(screenGeoBuffer.getMappedRange()).set(screenGeo);
+screenGeoBuffer.unmap();
+
+// create output texture
+let renderOutputTexture = device.createTexture({
+    size: [options.width, options.height],
+    format: colorTarget,
+    usage: GPUTextureUsage.RENDER_ATTACHMENT,
+    sampleCount: 4,
+});
+
+let previousData: {
+    bindGroup: GPUBindGroup;
+    pipeline: GPURenderPipeline;
+    buffers: bindGroupBuffers;
+} | null = null;
+export function render(scene: Scene, hasChanged: boolean = false) {
+    const sphereData = getSphereData(scene.spheres);
+    const cameraData = getCameraData(scene.camera);
+
+    let bindGroup: GPUBindGroup;
+    let buffers: bindGroupBuffers;
+    let pipeline: GPURenderPipeline;
+    if (hasChanged || previousData === null) {
+        const data = getBindGroupData(
+            scene.spheres.length,
+            scene.lights.length
+        );
+        bindGroup = data.group;
+        buffers = data.buffers;
+        pipeline = getPipeline();
+    } else {
+        buffers = previousData.buffers;
+        bindGroup = previousData.bindGroup;
+        pipeline = previousData.pipeline;
+    }
+
+    device.queue.writeBuffer(
+        buffers.cameraBuffer,
+        0,
+        getCameraData(scene.camera)
+    );
+    device.queue.writeBuffer(
+        buffers.spheresBuffer,
+        0,
+        getSphereData(scene.spheres)
+    );
+    device.queue.writeBuffer(
+        buffers.lightsBuffer,
+        0,
+        getLightData(scene.lights)
+    );
+    device.queue.writeBuffer(buffers.optionsBuffer, 0, getOptionsData(scene));
+
+    const commandEncoder = device.createCommandEncoder();
+    const renderPass = commandEncoder.beginRenderPass({
+        colorAttachments: [
+            {
+                clearValue: { r: 0, g: 0, b: 0, a: 0 },
+                loadOp: "clear",
+                storeOp: "store",
+                view: renderOutputTexture.createView(),
+                resolveTarget: context.getCurrentTexture().createView(),
+            },
+        ],
+    });
+
+    renderPass.setPipeline(pipeline);
+    renderPass.setBindGroup(0, bindGroup);
+    renderPass.setVertexBuffer(0, screenGeoBuffer);
+
+    renderPass.draw(6);
+    renderPass.end();
+
+    device.queue.submit([commandEncoder.finish()]);
+    previousData = { bindGroup, pipeline, buffers };
+}
+
+window.addEventListener("resize", () => {
+    options.width = canvas.width = window.innerWidth;
+    options.height = canvas.height = window.innerHeight;
+
+    renderOutputTexture.destroy();
+    renderOutputTexture = device.createTexture({
+        size: [options.width, options.height],
+        format: colorTarget,
+        usage: GPUTextureUsage.RENDER_ATTACHMENT,
+        sampleCount: 4,
+    });
+});

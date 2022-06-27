@@ -3,8 +3,9 @@ import {
     createSphere,
     getTranslationMatrix,
     getRotationMatrix,
-} from "./data.js";
-import { options, canvas } from "./init.js";
+} from "./render/data.js";
+import { canvas } from "./render/init.js";
+import { options } from "./options.js";
 
 //mouse
 export const mouse = { x: 0, y: 0 };

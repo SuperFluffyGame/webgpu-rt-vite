@@ -1,4 +1,4 @@
-import { device } from "./init.js";
+import { device } from "./render/init.js";
 // bindings
 export const cameraPosMatBuffer = device.createBuffer({
     size: 64,

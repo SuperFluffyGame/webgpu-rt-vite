@@ -1,9 +1,5 @@
-import { device } from "../../init.js";
-import {
-    sphereBuffer,
-    sphereCountBuffer,
-    lightPosBuffer,
-} from "../../buffers.js";
+import { device } from "../render/init.js";
+import { sphereBuffer, sphereCountBuffer, lightPosBuffer } from "../buffers.js";
 
 // binding 1: sphereBuffer
 // binding 2: sphereCountBuffer

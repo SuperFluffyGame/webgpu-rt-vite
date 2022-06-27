@@ -1,7 +1,7 @@
 import "./styles/main.css";
 import { canvas } from "./render/init.js";
 import { render, Scene } from "./render/render.js";
-import * as Controls from "./controls.js";
+import * as controls from "./controls.js";
 import { options } from "./options.js";
 import { updataStats } from "./stats";
 
@@ -40,8 +40,8 @@ function update(time: number) {
     scene.canvasSize[0] = options.width;
     scene.canvasSize[1] = options.height;
 
-    scene.camera.position = Controls.camera;
-    scene.camera.direction = Controls.rotation;
+    scene.camera.position = controls.camera;
+    scene.camera.direction = controls.rotation;
 
     const start = performance.now();
 

@@ -15,6 +15,5 @@
         "skipLibCheck": true,
         "types": ["vite/client", "./node_modules/@webgpu/types"]
     },
-    "include": ["src"],
-    "exclude": ["src/old_main.ts"]
+    "include": ["src"]
 }

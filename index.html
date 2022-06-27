@@ -14,12 +14,8 @@
                     <div id="crosshair"></div>
                 </div>
             </div>
-            <div id="options">
-                <div id="options-header">
-                    <p>Options</p>
-                </div>
-
-                <div id="options-body">
+            <div id="panel">
+                <div id="panel-body">
                     <!-- FOV -->
                     <p class="option-name">FOV:</p>
                     <p id="fov-display" class="option-display"></p>
@@ -32,6 +28,7 @@
                     />
                     <button id="fov-reset">Reset</button>
 
+                    <!-- Horizontal Mouse Sensitivity -->
                     <p class="option-name">H Mouse Sensitivity:</p>
                     <p id="h-mouse-display" class="option-display"></p>
                     <input
@@ -44,6 +41,7 @@
                     />
                     <button id="h-mouse-reset">Reset</button>
 
+                    <!-- Vertical Mouse Sensitivity -->
                     <p class="option-name">V Mouse Sensitivity:</p>
                     <p id="v-mouse-display" class="option-display"></p>
                     <input
@@ -55,6 +53,13 @@
                         step="0.1"
                     />
                     <button id="v-mouse-reset">Reset</button>
+                </div>
+                <!-- Stats-->
+                <div id="stats-body">
+                    <p class="option-name">FPS:</p>
+                    <p id="fps-display" class="option-display"></p>
+                    <p class="option-name">MS:</p>
+                    <p id="ms-display" class="option-display"></p>
                 </div>
             </div>
         </div>

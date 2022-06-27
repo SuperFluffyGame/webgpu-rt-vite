@@ -3,6 +3,7 @@ import { canvas } from "./render/init.js";
 import { render, Scene } from "./render/render.js";
 import * as Controls from "./controls.js";
 import { options } from "./options.js";
+import { updataStats } from "./stats";
 
 const scene: Scene = {
     camera: {
@@ -26,7 +27,14 @@ const scene: Scene = {
     canvasSize: new Float32Array([options.width, options.height]),
 };
 
-function update() {
+export let renderedMillis = 0;
+export let deltaTime = 0;
+
+let prevTime = 0;
+function update(time: number) {
+    deltaTime = time - prevTime;
+    prevTime = time;
+    updataStats(renderedMillis, deltaTime);
     requestAnimationFrame(update);
     scene.camera.fov = options.fov;
     scene.canvasSize[0] = options.width;
@@ -34,7 +42,13 @@ function update() {
 
     scene.camera.position = Controls.camera;
     scene.camera.direction = Controls.rotation;
+
+    const start = performance.now();
+
     render(scene);
+
+    const end = performance.now();
+    renderedMillis = end - start;
 }
 
-update();
+update(0);

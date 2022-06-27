@@ -1,9 +1,5 @@
 import { vec4 } from "gl-matrix";
-import {
-    createSphere,
-    getTranslationMatrix,
-    getRotationMatrix,
-} from "./render/data.js";
+import { getTranslationMatrix, getRotationMatrix } from "./render/data.js";
 import { canvas } from "./render/init.js";
 import { options } from "./options.js";
 
@@ -45,17 +41,6 @@ document.addEventListener("keyup", e => {
     pressedKeys[key] = false;
 });
 
-document.addEventListener("keypress", e => {
-    if (e.code == "KeyR") {
-        const vec = vec4.fromValues(0, 0, -4, 1);
-        vec4.transformMat4(vec, vec, getRotationMatrix());
-        vec4.transformMat4(vec, vec, getTranslationMatrix());
-
-        // vec4.transformMat4(vec, vec, getRotationMatrix());
-        createSphere(vec[0], vec[1], vec[2], random(0.2, 1));
-    }
-});
-
 export let inPointerLock = false;
 canvas.parentElement!.addEventListener("click", e => {
     document.body.requestPointerLock();
@@ -64,7 +49,3 @@ canvas.parentElement!.addEventListener("click", e => {
 document.addEventListener("pointerlockchange", e => {
     inPointerLock = !inPointerLock;
 });
-
-function random(min: number, max: number) {
-    return Math.random() * (max - min) + min;
-}

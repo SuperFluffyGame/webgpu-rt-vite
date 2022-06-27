@@ -27,25 +27,6 @@ export const screenGeo = new Float32Array([
      1,  1, 0, 1,
 ]);
 
-//prettier-ignore
-export let sphereData = new Float32Array(16)
-
-sphereData.set([
-    //  x, y, z, w,  r,    padding
-    2, 0, 0, 1, 1, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 0,
-]);
-export const sphereCount = new Float32Array([2]);
-export const lightPos = new Float32Array([3, -6, 0, 1]);
-
-export function createSphere(x: number, y: number, z: number, r: number) {
-    const oldSphereData = sphereData;
-    sphereData = new Float32Array((sphereCount[0] + 1) * 8);
-    sphereData.set(oldSphereData);
-
-    sphereData.set([x, y, z, 1, r, 0, 0, 0], sphereCount[0] * 8);
-    sphereCount[0]++;
-}
-
 export function getSphereData(spheres: Sphere[]) {
     const out = new Float32Array(spheres.length * 8);
     for (let i = 0; i < spheres.length; i++) {
@@ -58,17 +39,10 @@ export function getSphereData(spheres: Sphere[]) {
 
 export function getCameraData(camera: Camera) {
     const out = new Float32Array(36);
-    const translationMat = mat4.create();
-    mat4.translate(
-        translationMat,
-        translationMat,
-        camera.position as Float32Array
-    );
+    const translationMat = getTranslationMatrix();
     mat4.transpose(translationMat, translationMat);
 
-    const rotationMat = mat4.create();
-    mat4.rotateY(rotationMat, rotationMat, -camera.direction[0]);
-    mat4.rotateX(rotationMat, rotationMat, -camera.direction[1]);
+    const rotationMat = getRotationMatrix();
     mat4.transpose(rotationMat, rotationMat);
 
     out.set(translationMat, 0);

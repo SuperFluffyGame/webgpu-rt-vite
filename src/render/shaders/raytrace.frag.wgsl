@@ -14,15 +14,15 @@ struct Options {
     ray_bounces: f32,
     multi_sample: f32,
 }
-struct FragOutput {
-    @location(0) color: vec4<f32>
-}
-
 struct Camera {
     pos_mat: mat4x4<f32>,
     dir_mat: mat4x4<f32>,
     fov: f32,
 }
+struct FragOutput {
+    @location(0) color: vec4<f32>
+}
+
 
 @group(0) @binding(0) var<uniform> camera: Camera;
 @group(0) @binding(1) var<storage> spheres: array<Sphere>;

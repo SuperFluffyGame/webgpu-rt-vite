@@ -26,7 +26,7 @@ html {
 #c {
     display: block;
 }
-#options {
+#panel {
     background-color: #22222255;
 
     position: absolute;
@@ -35,20 +35,17 @@ html {
     transition: left 0.5s ease-in-out 0.1s;
 }
 
-#options-header {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    border-bottom: #1a1a1a55 solid 5px;
-
-    font-size: 2.5em;
-    font-weight: bold;
-}
-
-#options-body {
+#panel-body {
     padding: 0.5em;
     display: grid;
     grid-template-columns: auto auto auto auto;
+    gap: 0.5em;
+}
+
+#stats-body {
+    padding: 0.5em;
+    display: grid;
+    grid-template-columns: auto auto;
     gap: 0.5em;
 }
 

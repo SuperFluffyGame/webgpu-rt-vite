@@ -16,5 +16,5 @@
         "types": ["vite/client", "./node_modules/@webgpu/types"]
     },
     "include": ["src"],
-    "exclude": ["src/unused"]
+    "exclude": ["src/old_main.ts"]
 }

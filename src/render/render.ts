@@ -1,5 +1,14 @@
 import { vec2, vec4 } from "gl-matrix";
-import { device, colorTarget, context, canvas } from "./init.js";
+import {
+    device,
+    colorTarget,
+    context,
+    canvas,
+    basicVertShaderCode,
+    raytraceFragShaderCode,
+    raytraceFragSSAA4code,
+    raytraceFragSSAA9code,
+} from "./init.js";
 import { options } from "../options.js";
 import {
     screenGeo,
@@ -10,6 +19,7 @@ import {
 } from "./data.js";
 import { getBindGroupData, bindGroupBuffers } from "./bindings.js";
 import { getPipeline } from "./pipeline.js";
+import { AntiAliasing } from "../options.js";
 
 export interface Scene {
     spheres: Sphere[];
@@ -18,6 +28,7 @@ export interface Scene {
     multisample?: boolean;
     rayBounces?: number;
     canvasSize: vec2;
+    antiAliasing?: AntiAliasing;
 }
 
 export interface Camera {
@@ -58,8 +69,28 @@ let previousData: {
     bindGroup: GPUBindGroup;
     pipeline: GPURenderPipeline;
     buffers: bindGroupBuffers;
+    aa: AntiAliasing;
 } | null = null;
-export function render(scene: Scene, hasChanged: boolean = false) {
+export function render(scene: Scene, hasChanged?: boolean) {
+    let vert = basicVertShaderCode;
+    let frag: string;
+
+    switch (scene.antiAliasing) {
+        case AntiAliasing.SSAA4: {
+            frag = raytraceFragSSAA4code;
+            break;
+        }
+        case AntiAliasing.SSAA9: {
+            frag = raytraceFragSSAA9code;
+            break;
+        }
+        case AntiAliasing.NoAA:
+        default: {
+            frag = raytraceFragShaderCode;
+            break;
+        }
+    }
+
     let bindGroup: GPUBindGroup;
     let buffers: bindGroupBuffers;
     let pipeline: GPURenderPipeline;
@@ -70,7 +101,7 @@ export function render(scene: Scene, hasChanged: boolean = false) {
         );
         bindGroup = data.group;
         buffers = data.buffers;
-        pipeline = getPipeline();
+        pipeline = getPipeline(vert, frag);
     } else {
         buffers = previousData.buffers;
         bindGroup = previousData.bindGroup;
@@ -124,7 +155,12 @@ export function render(scene: Scene, hasChanged: boolean = false) {
     // commandEncoder.writeTimestamp(query, 1);
 
     // console.log(query);
-    previousData = { bindGroup, pipeline, buffers };
+    previousData = {
+        bindGroup,
+        pipeline,
+        buffers,
+        aa: scene.antiAliasing ?? AntiAliasing.NoAA,
+    };
 }
 
 window.addEventListener("resize", () => {

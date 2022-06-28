@@ -10,12 +10,12 @@ const pipelineLayout = device.createPipelineLayout({
     bindGroupLayouts: [bindGroupLayout],
 });
 
-export function getPipeline() {
+export function getPipeline(vertSource: string, fragSource: string) {
     return device.createRenderPipeline({
         layout: pipelineLayout,
         vertex: {
             module: device.createShaderModule({
-                code: basicVertShaderCode,
+                code: vertSource,
             }),
             entryPoint: "main",
             buffers: [
@@ -34,7 +34,7 @@ export function getPipeline() {
         },
         fragment: {
             module: device.createShaderModule({
-                code: raytraceFragShaderCode,
+                code: fragSource,
             }),
             entryPoint: "main",
             targets: [{ format: colorTarget }],

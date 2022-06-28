@@ -1,8 +1,8 @@
 import "./styles/main.css";
 import { render } from "./render/render.js";
 import * as controls from "./controls.js";
-import { options } from "./options.js";
-import { updataStats } from "./stats.js";
+import { options, criticalChanged, setCriticalChanged } from "./options.js";
+import * as stats from "./stats.js";
 import { scene, addSphere, addLight } from "./scene.js";
 
 // addSphere(0, -3, 3, 1, 1, 0, 1);
@@ -24,13 +24,20 @@ for (let i = 0; i < 250; i++) {
 }
 addLight(0, 0, 0, 1, 1, 1, 1);
 
-export let renderedMillis = 0;
+const previousDeltaTimes: number[] = [];
+
 export let deltaTime = 0;
 let prevTime: number;
 function update(time: number) {
     deltaTime = time - prevTime;
     prevTime = time;
-    updataStats(renderedMillis, deltaTime);
+    if (previousDeltaTimes.length > 19) {
+        previousDeltaTimes.shift();
+    }
+    previousDeltaTimes.push(deltaTime);
+
+    stats.updataStats(deltaTime, previousDeltaTimes);
+    controls.updateControls(deltaTime);
     requestAnimationFrame(update);
 
     scene.camera.fov = options.fov;
@@ -40,12 +47,10 @@ function update(time: number) {
     scene.camera.position = controls.camera;
     scene.camera.direction = controls.rotation;
 
-    const start = performance.now();
+    scene.antiAliasing = options.aa;
 
-    render(scene);
-
-    const end = performance.now();
-    renderedMillis = end - start;
+    render(scene, criticalChanged);
+    setCriticalChanged(false);
 }
 
 update(0);

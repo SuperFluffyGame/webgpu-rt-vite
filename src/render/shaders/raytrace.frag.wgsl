@@ -62,7 +62,7 @@ fn main(
     // let PI: f32 = 3.141592636;
     var out: FragOutput;
 
-    // let new_pos = getNewPosFromOldPos(pos.xy);
+    let new_pos = getNewPosFromOldPos(pos.xy);
     //vec2<f32>((pos.x - options.canvas_size.x / 2.0) / (min_size / 2.0), 
                             // (pos.y - options.canvas_size.y / 2.0) / (min_size / 2.0));
 
@@ -76,70 +76,42 @@ fn main(
     var closest_sphere_t: f32 = 100000;
 
 
-    var multi_sample_ray_dirs = array<vec2<f32>, 9>();
-    for(var i = 0; i < 3; i++){
-        for(var j = 0; j < 3; j++){
-            let ni = (f32(i) - 1.5) / 2.5;
-            let nj = (f32(j) - 1.5) / 2.5;
-            multi_sample_ray_dirs[i * 3 + j] = getNewPosFromOldPos(vec2<f32>(pos.x + ni, pos.y + nj));
+    var ray_dir = normalize(
+        vec4<f32>(
+            new_pos.x,
+            new_pos.y,
+            - (1 / tan(camera.fov / 2)), 1
+        ) * camera.dir_mat
+    );
+    let sky_color = mix(sky_color1, sky_color2, 1 -ray_dir.y);
+
+    for (var i = 0; i < i32(options.sphere_count); i++) {
+        var sphere = spheres[i];
+
+        var t = ray_sphere_hit(ray_origin, ray_dir, sphere.pos, sphere.radius);
+        if(t < closest_sphere_t && t > 0){
+            closest_sphere_index = f32(i);
+            closest_sphere_t = t;
         }
     }
 
-    var output_colors = array<vec4<f32>, 9>();
-    for(var i = 0; i < 9; i++){
-        let new_pos = multi_sample_ray_dirs[i];
-        var ray_dir = normalize(
-            vec4<f32>(
-                new_pos.x,
-                new_pos.y,
-                - (1 / tan(camera.fov / 2)), 1
-            ) * camera.dir_mat
-        );
-        let sky_color = mix(sky_color1, sky_color2, 1 -ray_dir.y);
+    if(closest_sphere_index >= 0 && closest_sphere_index < options.sphere_count && closest_sphere_t > 0){
+        let sphere = spheres[i32(closest_sphere_index)];
+        let hit_point = ray_origin + ray_dir * closest_sphere_t;
+        let normal = (hit_point - sphere.pos);
+        let light_to_hit_normal = normalize(hit_point - light_pos);
+        let hit_to_light_normal = normalize(light_pos - hit_point);
 
-        for (var i = 0; i < i32(options.sphere_count); i++) {
-            var sphere = spheres[i];
 
-            var t = ray_sphere_hit(ray_origin, ray_dir, sphere.pos, sphere.radius);
-            if(t < closest_sphere_t && t > 0){
-                closest_sphere_index = f32(i);
-                closest_sphere_t = t;
-            }
+        let light_t = ray_sphere_hit(hit_point, light_to_hit_normal, sphere.pos, sphere.radius - 0.01);
+
+        let light_distance = length(light_pos - hit_point);
+
+        if(light_t > 0){
+            out.color = sphere.color * (25 / light_distance);
         }
-
-        if(closest_sphere_index >= 0 && closest_sphere_index < options.sphere_count && closest_sphere_t > 0){
-            let sphere = spheres[i32(closest_sphere_index)];
-            let hit_point = ray_origin + ray_dir * closest_sphere_t;
-            let normal = (hit_point - sphere.pos);
-            let light_to_hit_normal = normalize(hit_point - light_pos);
-            let hit_to_light_normal = normalize(light_pos - hit_point);
-
-
-            let light_t = ray_sphere_hit(hit_point, light_to_hit_normal, sphere.pos, sphere.radius - 0.01);
-
-            let light_distance = length(light_pos - hit_point);
-
-            if(light_t > 0){
-                output_colors[i] = sphere.color * (25 / light_distance);
-            }
-        } else {
-            output_colors[i] = sky_color;
-        }
-    }
-
-    var averaged_color = vec3<f32>(0,0,0);
-    for(var i = 0; i < 9; i++){
-        averaged_color += output_colors[i].rgb;
-    }
-    averaged_color /= 9;
-
-    if(pos.x < options.canvas_size.x / 2){
-
-    out.color = vec4(averaged_color, 1);
     } else {
-        out.color = vec4(output_colors[4].rgb, 1);
+        out.color = sky_color;
     }
-
-
     return out;
 }

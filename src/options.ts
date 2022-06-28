@@ -1,3 +1,14 @@
+export const enum AntiAliasing {
+    NoAA,
+    SSAA4,
+    SSAA9,
+}
+
+export let criticalChanged = false;
+export function setCriticalChanged(b: boolean) {
+    criticalChanged = b;
+}
+
 export const options = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -7,6 +18,7 @@ export const options = {
     horizontalMouseSensitivity: 1,
     multiSample: false,
     optionPanelWidth: 300,
+    aa: AntiAliasing.NoAA,
 };
 options.fov = (options.fov * Math.PI) / 180;
 
@@ -34,6 +46,9 @@ const hMouseReset = document.getElementById(
     "h-mouse-reset"
 ) as HTMLButtonElement;
 
+const aaSelect = document.getElementById("aa-select") as HTMLSelectElement;
+const aaReset = document.getElementById("aa-reset") as HTMLButtonElement;
+
 fovSlider.addEventListener("input", e => {
     const fov = parseFloat(fovSlider.value);
     setFOV(fov);
@@ -59,6 +74,25 @@ hMouseSlider.addEventListener("input", e => {
 hMouseReset.addEventListener("click", e => {
     hMouseSlider.value = "1";
     setHmouseSensitivity(1);
+});
+
+aaSelect.addEventListener("change", e => {
+    criticalChanged = true;
+    const value = aaSelect.value;
+    switch (value) {
+        case "SSAA4": {
+            options.aa = AntiAliasing.SSAA4;
+            break;
+        }
+        case "SSAA9": {
+            options.aa = AntiAliasing.SSAA9;
+            break;
+        }
+        case "NoAA":
+        default: {
+            options.aa = AntiAliasing.NoAA;
+        }
+    }
 });
 
 window.addEventListener("load", e => {

@@ -17,7 +17,7 @@
             <div id="panel">
                 <div id="panel-body">
                     <!-- FOV -->
-                    <p class="option-name">FOV:</p>
+                    <p class="option-name">Field Of View:</p>
                     <p id="fov-display" class="option-display"></p>
                     <input
                         id="fov"
@@ -53,13 +53,22 @@
                         step="0.1"
                     />
                     <button id="v-mouse-reset">Reset</button>
-                </div>
-                <!-- Stats-->
-                <div id="stats-body">
-                    <p class="option-name">FPS:</p>
+
+                    <!-- Anti Aliasing-->
+                    <p class="option-name">Anti Aliasing:</p>
+                    <select id="aa-select">
+                        <option value="NoAA">No AA</option>
+                        <option value="SSAA4">SSAA4</option>
+                        <option value="SSAA9">SSAA9</option>
+                    </select>
+                    <button id="aa-reset">Reset</button>
+
+                    <!-- FPS Stat-->
+                    <p class="option-name">Frames Per Second:</p>
                     <p id="fps-display" class="option-display"></p>
-                    <p class="option-name">MS:</p>
-                    <p id="ms-display" class="option-display"></p>
+
+                    <p class="option-name">Twenty Frame Average:</p>
+                    <p id="tfa-display" class="option-display"></p>
                 </div>
             </div>
         </div>

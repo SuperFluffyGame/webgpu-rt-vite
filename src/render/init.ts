@@ -5,7 +5,15 @@ if (!navigator.gpu) {
 }
 import basicVertShaderCode from "./shaders/basic.vert.wgsl?raw";
 import raytraceFragShaderCode from "./shaders/raytrace.frag.wgsl?raw";
-export { basicVertShaderCode, raytraceFragShaderCode };
+import raytraceFragSSAA9code from "./shaders/raytrace-ssaa9.frag.wgsl?raw";
+import raytraceFragSSAA4code from "./shaders/raytrace-ssaa4.frag.wgsl?raw";
+
+export {
+    basicVertShaderCode,
+    raytraceFragShaderCode,
+    raytraceFragSSAA4code,
+    raytraceFragSSAA9code,
+};
 
 // get essentail parts
 export const adapter = (await navigator.gpu.requestAdapter({

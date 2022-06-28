@@ -42,11 +42,14 @@ html {
     gap: 0.5em;
 }
 
-#stats-body {
-    padding: 0.5em;
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 0.5em;
+#aa-select {
+    grid-column-start: 2;
+    grid-column-end: 4;
+}
+
+#fps-display {
+    grid-column-start: 2;
+    grid-column-end: 5;
 }
 
 .option-name,

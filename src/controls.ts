@@ -3,10 +3,8 @@ import { pressedKeys, mouse } from "./inputs.js";
 export const camera = new Float32Array(3);
 export const rotation = new Float32Array(2);
 
-const moveSpeed = 0.05;
-
-function update() {
-    requestAnimationFrame(update);
+export function updateControls(dt: number) {
+    const moveSpeed = 8 * (dt / 1000);
     if (pressedKeys.KeyW) {
         camera[2] -= moveSpeed * Math.cos(rotation[0]);
         camera[0] -= moveSpeed * -Math.sin(rotation[0]);
@@ -39,5 +37,3 @@ function update() {
     // rotation[0] = (-45 / 180) * Math.PI;
     // rotation[1] = (45 / 180) * Math.PI;
 }
-
-requestAnimationFrame(update);

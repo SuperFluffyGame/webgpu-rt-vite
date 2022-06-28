@@ -29,6 +29,7 @@ export interface Camera {
 export interface Sphere {
     radius: number;
     position: vec4;
+    color: vec4;
 }
 
 export interface Light {
@@ -59,9 +60,6 @@ let previousData: {
     buffers: bindGroupBuffers;
 } | null = null;
 export function render(scene: Scene, hasChanged: boolean = false) {
-    const sphereData = getSphereData(scene.spheres);
-    const cameraData = getCameraData(scene.camera);
-
     let bindGroup: GPUBindGroup;
     let buffers: bindGroupBuffers;
     let pipeline: GPURenderPipeline;
@@ -116,7 +114,16 @@ export function render(scene: Scene, hasChanged: boolean = false) {
     renderPass.draw(6);
     renderPass.end();
 
+    // const query = device.createQuerySet({
+    //     type: "timestamp",
+    //     count: 2,
+    // });
+
+    // commandEncoder.writeTimestamp(query, 0);
     device.queue.submit([commandEncoder.finish()]);
+    // commandEncoder.writeTimestamp(query, 1);
+
+    // console.log(query);
     previousData = { bindGroup, pipeline, buffers };
 }
 

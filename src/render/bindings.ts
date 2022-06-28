@@ -81,6 +81,7 @@ export function getBindGroupData(numSpheres: number, numLights: number) {
     const optionsBuffer = getOptionsBuffer();
 
     const group = device.createBindGroup({
+        label: "bind group",
         layout: bindGroupLayout,
         entries: [
             {

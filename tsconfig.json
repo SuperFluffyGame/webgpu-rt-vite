@@ -13,7 +13,8 @@
         "noEmit": true,
         "noImplicitReturns": true,
         "skipLibCheck": true,
-        "types": ["vite/client", "./node_modules/@webgpu/types"]
+        "noImplicitAny": true,
+        "types": ["vite/client", "@webgpu/types"]
     },
     "include": ["src"]
 }

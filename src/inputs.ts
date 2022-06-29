@@ -1,5 +1,3 @@
-import { vec4 } from "gl-matrix";
-import { getTranslationMatrix, getRotationMatrix } from "./render/data.js";
 import { canvas } from "./render/init.js";
 import { options } from "./options.js";
 
@@ -42,8 +40,11 @@ document.addEventListener("keyup", e => {
 });
 
 export let inPointerLock = false;
-canvas.parentElement!.addEventListener("click", e => {
-    document.body.requestPointerLock();
+console.log(canvas);
+canvas.addEventListener("click", e => {
+    console.log("click");
+    e.preventDefault();
+    canvas.requestPointerLock();
 });
 
 document.addEventListener("pointerlockchange", e => {

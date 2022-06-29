@@ -1,12 +1,13 @@
 import { options } from "../options";
 
 if (!navigator.gpu) {
-    throw "WebGPU is not enabled!";
+    webGPUnotEnabled();
 }
 import basicVertShaderCode from "./shaders/basic.vert.wgsl?raw";
 import raytraceFragShaderCode from "./shaders/raytrace.frag.wgsl?raw";
 import raytraceFragSSAA9code from "./shaders/raytrace-ssaa9.frag.wgsl?raw";
 import raytraceFragSSAA4code from "./shaders/raytrace-ssaa4.frag.wgsl?raw";
+import { webGPUnotEnabled } from "../errors";
 
 export {
     basicVertShaderCode,

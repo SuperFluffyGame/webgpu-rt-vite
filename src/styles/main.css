@@ -47,20 +47,22 @@ html {
     grid-column-end: 4;
 }
 
-#fps-display {
+.stat-display {
     grid-column-start: 2;
     grid-column-end: 5;
 }
 
 .option-name,
-.option-display {
+.option-display,
+.stat-name,
+.stat-display {
     font-size: 1.25em;
 }
 
 #crosshair {
     background-color: red;
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
 }
 #crosshair-wrapper {
     width: 100%;

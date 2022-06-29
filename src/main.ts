@@ -1,16 +1,44 @@
 import "./styles/main.css";
 import { render } from "./render/render.js";
 import * as controls from "./controls.js";
-import { options, criticalChanged, setCriticalChanged } from "./options.js";
 import * as stats from "./stats.js";
+import { options, criticalChanged, setCriticalChanged } from "./options.js";
 import { scene, addSphere, addLight } from "./scene.js";
+import { formatString } from "./utils";
+
+// const toFormat = "Random Number: ${data.thing}";
+
+// const formatted = formatString(
+//     toFormat,
+//     {
+//         thing: { name: "World", type: "Planet" },
+//     },
+//     { stringifyJSON: true }
+// );
+
+// console.log(formatted);
 
 // addSphere(0, -3, 3, 1, 1, 0, 1);
 // addSphere(0, 3, 4, 1, 0, 1, 1);
 // addSphere(5, 3, 0, 1, 1, 1, 0);
+
+// addSphere(0, -10, 0, 4, 1, 1, 0);
+// addSphere(0, -4, 0, 1, 1, 0, 1);
+// addSphere(1, 0, 0, 1, 1, 1, 1);
+
+// addSphere(2, 0, 0, 1.5, 1, 1, 1);
 let spread_distance = 100;
 
-for (let i = 0; i < 250; i++) {
+// console.log(
+//     raySphereIntersection(
+//         vec3.fromValues(0, 2, 0),
+//         vec3.fromValues(0, 1, 0),
+//         vec3.fromValues(0, 10, 0),
+//         1.5
+//     )
+// );
+
+for (let i = 0; i < 50; i++) {
     addSphere(
         Math.random() * spread_distance - spread_distance / 2,
         Math.random() * spread_distance - spread_distance / 2,
@@ -22,7 +50,7 @@ for (let i = 0; i < 250; i++) {
         Math.random()
     );
 }
-addLight(0, 0, 0, 1, 1, 1, 1);
+addLight(1, 0, 0, 1, 1, 1, 1);
 
 const previousDeltaTimes: number[] = [];
 
@@ -36,7 +64,7 @@ function update(time: number) {
     }
     previousDeltaTimes.push(deltaTime);
 
-    stats.updataStats(deltaTime, previousDeltaTimes);
+    stats.updataStats(scene, deltaTime, previousDeltaTimes);
     controls.updateControls(deltaTime);
     requestAnimationFrame(update);
 

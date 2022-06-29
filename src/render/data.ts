@@ -77,6 +77,6 @@ export function getOptionsData(scene: Scene) {
     // out.set([scene.spheres.length], 2);
     out.set([scene.spheres.length], 2);
     out.set([scene.rayBounces ?? 0], 3);
-    out.set([scene.multisample ? 1 : 0], 4);
+    out.set([scene.lights.length], 4);
     return out;
 }

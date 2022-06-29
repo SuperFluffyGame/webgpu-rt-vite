@@ -3,9 +3,10 @@
 A simple raytracer, in the expiremental WebGPU API
 
 ### TODO
-1. Finish Options Panel
-2. Multi Object Light Collision
+
+1. DONE: Finish Options Panel
+2. DONE: Multi Object Light Collision
 3. Reflections
-4. Multisampling
+4. DONE: Multisampling
 5. Optimization
     - View Culling

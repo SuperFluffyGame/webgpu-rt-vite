@@ -5,9 +5,6 @@ import { options } from "./options.js";
 export const mouse = { x: 0, y: 0 };
 export const mouseOffset = { x: 0, y: 0 };
 document.addEventListener("mousemove", e => {
-    if (!inPointerLock) {
-        return;
-    }
     // mouse.x = e.x / (canvas.width / 2) - 1;
     // mouse.y = -e.y / (canvas.height / 2) + 1;
 
@@ -40,13 +37,10 @@ document.addEventListener("keyup", e => {
 });
 
 export let inPointerLock = false;
-console.log(canvas);
-canvas.addEventListener("click", e => {
-    console.log("click");
-    e.preventDefault();
+canvas.parentElement!.addEventListener("click", e => {
     canvas.requestPointerLock();
 });
 
 document.addEventListener("pointerlockchange", e => {
-    inPointerLock = !inPointerLock;
+    inPointerLock = document.pointerLockElement === canvas;
 });

@@ -119,7 +119,7 @@ fn main(
             let hit_to_light_normal = normalize(light_pos - hit_point);
 
 
-            let light_t = ray_sphere_hit(hit_point, light_to_hit_normal, sphere.pos, sphere.radius - 0.01);
+            let light_t = ray_sphere_hit(hit_point, light_to_hit_normal, sphere.pos, sphere.radius - 0.001);
 
             let light_distance = length(light_pos - hit_point);
 

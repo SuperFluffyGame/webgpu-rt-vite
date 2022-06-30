@@ -26,19 +26,8 @@ import { formatString } from "./utils";
 // addSphere(0, -4, 0, 1, 1, 0, 1);
 // addSphere(1, 0, 0, 1, 1, 1, 1);
 
-// addSphere(2, 0, 0, 1.5, 1, 1, 1);
 let spread_distance = 100;
-
-// console.log(
-//     raySphereIntersection(
-//         vec3.fromValues(0, 2, 0),
-//         vec3.fromValues(0, 1, 0),
-//         vec3.fromValues(0, 10, 0),
-//         1.5
-//     )
-// );
-
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 1000; i++) {
     addSphere(
         Math.random() * spread_distance - spread_distance / 2,
         Math.random() * spread_distance - spread_distance / 2,

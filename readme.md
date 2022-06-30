@@ -1,12 +1,17 @@
-# WebGPU RayTracing (with Vite)
+# **WebGPU RayTracing (with Vite)**
 
-A simple raytracer, in the expiremental WebGPU API
+**A simple raytracer, in the expiremental WebGPU API**
 
-### TODO
+## TODO:
 
 1. DONE: Finish Options Panel
 2. DONE: Multi Object Light Collision
-3. Reflections
-4. DONE: Multisampling
-5. Optimization
-    - View Culling
+3. DONE: Move ray color code to function
+4. Reflections
+5. Multiple Light Sources
+6. DONE: Multisampling (needs reworked lol)
+7. Optimization
+
+## Problems:
+
+1. Mouse Events don't work on canvas element (no clue)

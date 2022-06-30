@@ -39,15 +39,9 @@ export function updateControls(dt: number) {
 
     rotation[0] = mouse.x;
     rotation[1] = mouse.y;
-
-    // rotation[0] = 0;
-    // rotation[1] = 0;
-    // rotation[0] = (-45 / 180) * Math.PI;
-    // rotation[1] = (45 / 180) * Math.PI;
 }
 
 canvas.addEventListener("mousedown", e => {
-    console.log("click");
     if (e.button === 2) {
         const pos = vec4.fromValues(0, 0, -4, 1);
         vec4.transformMat4(pos, pos, getRotationMatrix(scene.camera));

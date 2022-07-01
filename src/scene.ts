@@ -24,12 +24,14 @@ export function addSphere(
     r: number,
     cr: number,
     cg: number,
-    cb: number
+    cb: number,
+    reflectiveness: number
 ) {
     scene.spheres.push({
         position: new Float32Array([x, y, z, 1]),
         radius: r,
         color: new Float32Array([cr, cg, cb, 1]),
+        reflectiveness: reflectiveness,
     });
 }
 

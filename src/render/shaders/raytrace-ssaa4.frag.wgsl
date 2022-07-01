@@ -124,7 +124,7 @@ fn main(
             let light_distance = length(light_pos - hit_point);
 
             if(light_t > 0){
-                output_colors[i] = sphere.color * (25 / light_distance);
+                output_colors[i] = sphere.color; //* (25 / light_distance);
             }
         } else {
             output_colors[i] = sky_color;

@@ -38,7 +38,7 @@ export function getLightsBuffer(numLights: number) {
 export function getOptionsBuffer() {
     return device.createBuffer({
         label: "options buffer",
-        size: 20,
+        size: 24,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 }

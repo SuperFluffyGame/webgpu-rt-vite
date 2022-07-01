@@ -13,13 +13,14 @@ export const options = {
     width: window.innerWidth,
     height: window.innerHeight,
     fov: 75,
-    rayBounces: 0,
+    rayBounces: 4,
     verticalMouseSensitivity: 1,
     horizontalMouseSensitivity: 1,
     multiSample: false,
     optionPanelWidth: 300,
     aa: AntiAliasing.NoAA,
-    renderDistance: 50,
+    renderDistance: 150,
+    globalReflectiveness: 0.5,
 };
 options.fov = (options.fov * Math.PI) / 180;
 
@@ -59,6 +60,13 @@ const renderDistanceDisplay = document.getElementById(
 const renderDistanceReset = document.getElementById(
     "render-distance-reset"
 ) as HTMLButtonElement;
+
+const rayBouncesSlider = document.getElementById(
+    "ray-bounces"
+) as HTMLInputElement;
+const rayBouncesDisplay = document.getElementById(
+    "ray-bounces-display"
+) as HTMLParagraphElement;
 
 fovSlider.addEventListener("input", e => {
     const fov = parseFloat(fovSlider.value);
@@ -115,6 +123,11 @@ renderDistanceReset.addEventListener("click", e => {
     setRenderDistance(50);
 });
 
+rayBouncesSlider.addEventListener("input", e => {
+    const value = parseFloat(rayBouncesSlider.value);
+    setRayBounces(value);
+});
+
 window.addEventListener("load", e => {
     const fovValue = parseFloat(fovSlider.value);
     const fovDisplayValue = fovValue.toString().padStart(3, "0");
@@ -130,6 +143,9 @@ window.addEventListener("load", e => {
 
     const renderDistanceValue = parseFloat(renderDistanceSlider.value);
     renderDistanceDisplay.innerText = `${renderDistanceValue}`;
+
+    const rayBoncesValue = parseFloat(rayBouncesSlider.value);
+    rayBouncesDisplay.innerText = `${rayBoncesValue}`;
 });
 
 function setFOV(fov: number) {
@@ -156,4 +172,10 @@ function setVmouseSensitivity(sensitivity: number) {
 function setRenderDistance(value: number) {
     options.renderDistance = value;
     renderDistanceDisplay.innerText = `${value}`;
+}
+
+function setRayBounces(value: number) {
+    rayBouncesSlider.value = value.toString();
+    options.rayBounces = value;
+    rayBouncesDisplay.innerText = value.toString();
 }

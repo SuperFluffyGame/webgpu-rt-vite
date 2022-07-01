@@ -46,8 +46,7 @@ canvas.addEventListener("mousedown", e => {
         const pos = vec4.fromValues(0, 0, -4, 1);
         vec4.transformMat4(pos, pos, getRotationMatrix(scene.camera));
         vec4.transformMat4(pos, pos, getTranslationMatrix(scene.camera));
-        // @ts-ignore
-        addSphere(...pos, Math.random(), Math.random(), Math.random(), 1);
+        addSphere(pos[0], pos[1], pos[2], 0.5, 0, 0, 1, 1);
         setCriticalChanged(true);
     } else if (e.button === 0) {
         const rot = vec3.fromValues(0, 0, 1);

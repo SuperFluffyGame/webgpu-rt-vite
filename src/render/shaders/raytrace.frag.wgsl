@@ -2,6 +2,7 @@ struct Sphere {
     pos: vec4<f32>,
     color: vec4<f32>,
     radius: f32,
+    reflectiveness: f32,
 }
 
 struct Light {
@@ -15,6 +16,7 @@ struct Options {
     sphere_count: f32,
     ray_bounces: f32,
     light_count: f32,
+    global_reflectiveness: f32,
 }
 struct Camera {
     pos_mat: mat4x4<f32>,
@@ -95,44 +97,76 @@ fn getNewPosFromOldPos(pos: vec2<f32>) -> vec2<f32> {
     return new_pos;
 }
 
-
 @fragment
 fn main(
     @builtin(position) pos: vec4<f32>
 ) -> @location(0) vec4<f32> {
 
 
-    let new_pos = getNewPosFromOldPos(pos.xy);
-    let ray_origin = vec4<f32>(0, 0, 0, 1) * camera.pos_mat;
+    let pixel_pos = getNewPosFromOldPos(pos.xy);
+    let light_pos = lights[0].pos;
+
+    let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);
+    let sky_color2 = vec4<f32>(46 / 255.0, 168 / 255.0, 201 / 255.0, 1);
+
+
+
+    var ray_origin = vec4<f32>(0, 0, 0, 1) * camera.pos_mat;
     var ray_dir = normalize(
         vec4<f32>(
-            new_pos.x,
-            new_pos.y,
+            pixel_pos.x,
+            pixel_pos.y,
             - (1 / tan(camera.fov / 2)),
             1
         ) * camera.dir_mat
     );
 
-    let sky_color1 = vec4<f32>(138 / 255.0, 255 / 255.0, 249 / 255.0, 1);
-    let sky_color2 = vec4<f32>(46 / 255.0, 168 / 255.0, 201 / 255.0, 1);
-    let sky_color = mix(sky_color1, sky_color2, 1 - ray_dir.y);
+    var overall_color = vec4<f32>(1, 0, 0, 1);
+    var ray_reflectiveness = 0.0;
 
-    let light_pos = lights[0].pos;
+    for(var i = 0; i < i32(options.ray_bounces) + 1; i++){
+        var color: vec4<f32>;
+        let sky_color = mix(sky_color1, sky_color2, 1 - ray_dir.y);
+
+        let hit = get_closest_sphere(ray_origin, ray_dir, -1.0);
+        if( hit.t <= 0 ) {
+            color = sky_color;
+            if(i == 0){
+                overall_color = color;
+            } else {
+                overall_color = mix(overall_color, color, ray_reflectiveness);
+            }
+            break;
+        }
+        let sphere = spheres[i32(hit.index)];
+
+        let hit_point = ray_origin + ray_dir * hit.t;
+        let hit_normal = normalize(hit_point.xyz - sphere.pos.xyz);
+
+        let light_to_hit_normal = vec4(normalize(hit_point.xyz - light_pos.xyz), 1);
+
+        let hit_by_light: f32 = is_occluded(light_pos, light_to_hit_normal, hit_point, i32(hit.index));
 
 
-    let initial_hit = get_closest_sphere(ray_origin, ray_dir, -1.0);
-    let sphere = spheres[i32(initial_hit.index)];
-    let hit_point = ray_origin + ray_dir * initial_hit.t;
-    let light_to_hit_normal = vec4(normalize(hit_point.xyz - light_pos.xyz), 1);
 
-    let hit_by_light: f32 = is_occluded(light_pos, light_to_hit_normal, hit_point, i32(initial_hit.index));
+        color = sphere.color;//vec4(vec3(sphere.reflectiveness), 1);
+  
 
+        if(i == 0){
+            overall_color = color;
+        } else {
+            overall_color = mix(overall_color, color, ray_reflectiveness);
+        }
+        
+        ray_origin = hit_point;
+        ray_dir = vec4(reflect(ray_dir.xyz, hit_normal), 1);
+        if( i == 0) {
+            ray_reflectiveness = sphere.reflectiveness;
+        } else {
+            ray_reflectiveness = ray_reflectiveness * sphere.reflectiveness;
+        }
 
-
-
-    //if it did not hit a sphere, return the sky color
-    if (initial_hit.t < 0.0) {
-        return sky_color;
     }
-    return (sphere.color * clamp(25 / distance(light_pos.xyz, hit_point.xyz), 0, 1)) * hit_by_light;
+
+    return overall_color;
 }

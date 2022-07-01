@@ -33,6 +33,7 @@ export interface Options {
     rayBounces?: number;
     canvasSize: vec2;
     antiAliasing?: AntiAliasing;
+    globalReflectiveness?: number;
 }
 
 export interface Camera {
@@ -46,6 +47,7 @@ export interface Sphere {
     radius: number;
     position: vec4;
     color: vec4;
+    reflectiveness: number;
 }
 
 export interface Light {

@@ -4,31 +4,18 @@ import * as controls from "./controls.js";
 import * as stats from "./stats.js";
 import { options, criticalChanged, setCriticalChanged } from "./options.js";
 import { scene, addSphere, addLight } from "./scene.js";
-import { formatString } from "./utils";
 import { vec4 } from "gl-matrix";
-
-// const toFormat = "Random Number: ${data.thing}";
-
-// const formatted = formatString(
-//     toFormat,
-//     {
-//         thing: { name: "World", type: "Planet" },
-//     },
-//     { stringifyJSON: true }
-// );
-
-// console.log(formatted);
 
 // addSphere(0, -3, 3, 1, 1, 0, 1);
 // addSphere(0, 3, 4, 1, 0, 1, 1);
 // addSphere(5, 3, 0, 1, 1, 1, 0);
 
-// addSphere(0, -10, 0, 4, 1, 1, 0);
-// addSphere(0, -4, 0, 1, 1, 0, 1);
-// addSphere(1, 0, 0, 1, 1, 1, 1);
+// addSphere(0, -10, 0, 4, 1, 1, 0, 0);
+// addSphere(0, -4, 0, 1, 1, 0, 1, 1);
+// addSphere(2, 0, 0, 1, 1, 1, 1, 0.0);
 
-let spread_distance = 100;
-for (let i = 0; i < 5000; i++) {
+let spread_distance = 50;
+for (let i = 0; i < 500; i++) {
     addSphere(
         Math.random() * spread_distance - spread_distance / 2,
         Math.random() * spread_distance - spread_distance / 2,
@@ -37,16 +24,13 @@ for (let i = 0; i < 5000; i++) {
 
         Math.random(),
         Math.random(),
+        Math.random(),
         Math.random()
     );
 }
 addLight(1, 0, 0, 1, 1, 1, 1);
 
 const previousDeltaTimes: number[] = [];
-
-let a = new Float32Array([1, 2, 3, 1]);
-let b = new Float32Array([1, 2, 5, 1]);
-console.log(vec4.dist(a, b));
 
 export let deltaTime = 0;
 let prevTime: number;
@@ -65,6 +49,8 @@ function update(time: number) {
     scene.camera.renderDistance = options.renderDistance;
     scene.options.canvasSize[0] = options.width;
     scene.options.canvasSize[1] = options.height;
+    scene.options.rayBounces = options.rayBounces;
+    scene.options.globalReflectiveness = options.globalReflectiveness;
 
     scene.camera.position = vec4.fromValues(
         controls.camera[0],

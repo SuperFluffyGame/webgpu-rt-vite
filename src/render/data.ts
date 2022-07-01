@@ -52,6 +52,7 @@ export function getSphereData(spheres: Sphere[]) {
         out.set(sphere.position, i * 12);
         out.set(sphere.color, i * 12 + 4);
         out.set([sphere.radius], i * 12 + 8);
+        out.set([sphere.reflectiveness], i * 12 + 9);
     }
     return out;
 }
@@ -72,10 +73,11 @@ export function getLightData(lights: Light[]) {
 }
 
 export function getOptionsData(scene: Scene, sphereCount: number) {
-    const out = new Float32Array(5);
+    const out = new Float32Array(6);
     out.set(scene.options.canvasSize, 0);
     out.set([sphereCount], 2);
     out.set([scene.options.rayBounces ?? 0], 3);
     out.set([scene.lights.length], 4);
+    out.set([scene.options.globalReflectiveness ?? 0], 5);
     return out;
 }

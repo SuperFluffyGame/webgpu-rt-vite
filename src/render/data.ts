@@ -1,5 +1,5 @@
 import { mat4, vec2 } from "gl-matrix";
-import { Camera, Sphere, Light, Scene } from "./render.js";
+import { Camera, Sphere, Light, Scene, Options } from "./render.js";
 
 export function getRotationMatrix(camera: Camera) {
     const mat = mat4.create();
@@ -71,12 +71,11 @@ export function getLightData(lights: Light[]) {
     return out;
 }
 
-export function getOptionsData(scene: Scene) {
+export function getOptionsData(scene: Scene, sphereCount: number) {
     const out = new Float32Array(5);
-    out.set(scene.canvasSize, 0);
-    // out.set([scene.spheres.length], 2);
-    out.set([scene.spheres.length], 2);
-    out.set([scene.rayBounces ?? 0], 3);
+    out.set(scene.options.canvasSize, 0);
+    out.set([sphereCount], 2);
+    out.set([scene.options.rayBounces ?? 0], 3);
     out.set([scene.lights.length], 4);
     return out;
 }

@@ -19,6 +19,7 @@ export const options = {
     multiSample: false,
     optionPanelWidth: 300,
     aa: AntiAliasing.NoAA,
+    renderDistance: 50,
 };
 options.fov = (options.fov * Math.PI) / 180;
 
@@ -48,6 +49,16 @@ const hMouseReset = document.getElementById(
 
 const aaSelect = document.getElementById("aa-select") as HTMLSelectElement;
 const aaReset = document.getElementById("aa-reset") as HTMLButtonElement;
+
+const renderDistanceSlider = document.getElementById(
+    "render-distance"
+) as HTMLInputElement;
+const renderDistanceDisplay = document.getElementById(
+    "render-distance-display"
+) as HTMLParagraphElement;
+const renderDistanceReset = document.getElementById(
+    "render-distance-reset"
+) as HTMLButtonElement;
 
 fovSlider.addEventListener("input", e => {
     const fov = parseFloat(fovSlider.value);
@@ -95,6 +106,15 @@ aaSelect.addEventListener("change", e => {
     }
 });
 
+renderDistanceSlider.addEventListener("input", e => {
+    const distance = parseFloat(renderDistanceSlider.value);
+    setRenderDistance(distance);
+});
+renderDistanceReset.addEventListener("click", e => {
+    renderDistanceSlider.value = "50";
+    setRenderDistance(50);
+});
+
 window.addEventListener("load", e => {
     const fovValue = parseFloat(fovSlider.value);
     const fovDisplayValue = fovValue.toString().padStart(3, "0");
@@ -107,6 +127,9 @@ window.addEventListener("load", e => {
     const hMouseValue = parseFloat(hMouseSlider.value);
     const hMouseDisplayValue = hMouseValue.toFixed(1);
     hMouseDisplay.innerText = `${hMouseDisplayValue}`;
+
+    const renderDistanceValue = parseFloat(renderDistanceSlider.value);
+    renderDistanceDisplay.innerText = `${renderDistanceValue}`;
 });
 
 function setFOV(fov: number) {
@@ -128,4 +151,9 @@ function setVmouseSensitivity(sensitivity: number) {
 
     const display = sensitivity.toFixed(1);
     vMouseDisplay.innerText = `${display}`;
+}
+
+function setRenderDistance(value: number) {
+    options.renderDistance = value;
+    renderDistanceDisplay.innerText = `${value}`;
 }

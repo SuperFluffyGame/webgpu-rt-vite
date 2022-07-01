@@ -1,4 +1,4 @@
-import { vec2, vec4 } from "gl-matrix";
+import { vec2, vec3, vec4 } from "gl-matrix";
 import {
     device,
     colorTarget,
@@ -25,6 +25,10 @@ export interface Scene {
     spheres: Sphere[];
     lights: Light[];
     camera: Camera;
+    options: Options;
+}
+
+export interface Options {
     multisample?: boolean;
     rayBounces?: number;
     canvasSize: vec2;
@@ -35,6 +39,7 @@ export interface Camera {
     position: vec4;
     direction: vec2;
     fov: number;
+    renderDistance?: number;
 }
 
 export interface Sphere {
@@ -47,6 +52,10 @@ export interface Light {
     position: vec4;
     color: vec4;
     intensity: number;
+}
+
+export interface RenderInfo {
+    spheresRendered: number;
 }
 
 const screenGeoBuffer = device.createBuffer({
@@ -75,7 +84,7 @@ export function render(scene: Scene, hasChanged?: boolean) {
     let vert = basicVertShaderCode;
     let frag: string;
 
-    switch (scene.antiAliasing) {
+    switch (scene.options.antiAliasing) {
         case AntiAliasing.SSAA4: {
             frag = raytraceFragSSAA4code;
             break;
@@ -91,12 +100,23 @@ export function render(scene: Scene, hasChanged?: boolean) {
         }
     }
 
+    let filteredSpheres = scene.spheres;
+    if (scene.camera.renderDistance) {
+        filteredSpheres = filteredSpheres.filter(
+            sphere =>
+                vec4.dist(sphere.position, scene.camera.position) +
+                    sphere.radius <
+                scene.camera.renderDistance!
+        );
+    }
+    hasChanged = true;
+
     let bindGroup: GPUBindGroup;
     let buffers: bindGroupBuffers;
     let pipeline: GPURenderPipeline;
     if (hasChanged || previousData === null) {
         const data = getBindGroupData(
-            scene.spheres.length,
+            filteredSpheres.length,
             scene.lights.length
         );
         bindGroup = data.group;
@@ -113,17 +133,22 @@ export function render(scene: Scene, hasChanged?: boolean) {
         0,
         getCameraData(scene.camera)
     );
+
     device.queue.writeBuffer(
         buffers.spheresBuffer,
         0,
-        getSphereData(scene.spheres)
+        getSphereData(filteredSpheres)
     );
     device.queue.writeBuffer(
         buffers.lightsBuffer,
         0,
         getLightData(scene.lights)
     );
-    device.queue.writeBuffer(buffers.optionsBuffer, 0, getOptionsData(scene));
+    device.queue.writeBuffer(
+        buffers.optionsBuffer,
+        0,
+        getOptionsData(scene, filteredSpheres.length)
+    );
 
     const commandEncoder = device.createCommandEncoder();
     const renderPass = commandEncoder.beginRenderPass({
@@ -159,7 +184,11 @@ export function render(scene: Scene, hasChanged?: boolean) {
         bindGroup,
         pipeline,
         buffers,
-        aa: scene.antiAliasing ?? AntiAliasing.NoAA,
+        aa: scene.options.antiAliasing ?? AntiAliasing.NoAA,
+    };
+
+    return {
+        spheresRendered: filteredSpheres.length,
     };
 }
 

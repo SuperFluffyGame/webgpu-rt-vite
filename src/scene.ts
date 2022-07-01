@@ -8,10 +8,13 @@ export const scene: Scene = {
         position: new Float32Array([0, 0, 5, 1]),
         direction: new Float32Array([0, 0]),
         fov: options.fov,
+        renderDistance: options.renderDistance,
     },
     spheres: [],
     lights: [],
-    canvasSize: new Float32Array([options.width, options.height]),
+    options: {
+        canvasSize: new Float32Array([options.width, options.height]),
+    },
 };
 
 export function addSphere(

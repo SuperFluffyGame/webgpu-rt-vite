@@ -101,6 +101,7 @@ fn main(
     @builtin(position) pos: vec4<f32>
 ) -> @location(0) vec4<f32> {
 
+
     let new_pos = getNewPosFromOldPos(pos.xy);
     let ray_origin = vec4<f32>(0, 0, 0, 1) * camera.pos_mat;
     var ray_dir = normalize(

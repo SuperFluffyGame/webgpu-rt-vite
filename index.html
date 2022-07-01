@@ -54,6 +54,18 @@
                     />
                     <button id="v-mouse-reset">Reset</button>
 
+                    <!-- Render Distance -->
+                    <p class="option-name">Render Distance:</p>
+                    <p id="render-distance-display" class="option-display"></p>
+                    <input
+                        id="render-distance"
+                        type="range"
+                        min="10"
+                        max="150"
+                        value="50"
+                    />
+                    <button id="render-distance-reset">Reset</button>
+
                     <!-- Anti Aliasing-->
                     <p class="option-name">Anti Aliasing:</p>
                     <select id="aa-select">
@@ -73,6 +85,9 @@
                     <!-- Scene Stats-->
                     <p class="stat-name">Sphere Count:</p>
                     <p id="sphere-count-display" class="stat-display"></p>
+
+                    <p class="stat-name">Rendered Spheres:</p>
+                    <p id="rendered-spheres-display" class="stat-display"></p>
                 </div>
             </div>
         </div>

@@ -106,7 +106,7 @@ export function render(scene: Scene, hasChanged?: boolean) {
     if (scene.camera.renderDistance) {
         filteredSpheres = filteredSpheres.filter(
             sphere =>
-                vec4.dist(sphere.position, scene.camera.position) +
+                vec4.dist(sphere.position, scene.camera.position) -
                     sphere.radius <
                 scene.camera.renderDistance!
         );

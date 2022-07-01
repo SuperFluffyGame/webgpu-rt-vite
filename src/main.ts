@@ -10,25 +10,26 @@ import { vec4 } from "gl-matrix";
 // addSphere(0, 3, 4, 1, 0, 1, 1);
 // addSphere(5, 3, 0, 1, 1, 1, 0);
 
-// addSphere(0, -10, 0, 4, 1, 1, 0, 0);
-// addSphere(0, -4, 0, 1, 1, 0, 1, 1);
-// addSphere(2, 0, 0, 1, 1, 1, 1, 0.0);
+//ground
+addSphere(0, 200, 0, 200, 0, 0.5, 0, 0);
 
-let spread_distance = 50;
-for (let i = 0; i < 500; i++) {
-    addSphere(
-        Math.random() * spread_distance - spread_distance / 2,
-        Math.random() * spread_distance - spread_distance / 2,
-        Math.random() * spread_distance - spread_distance / 2,
-        Math.random() * 0.5 + 0.5,
+addSphere(1, -1, 0, 1, 0.5, 0.5, 0.5, 0.75);
 
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random()
-    );
-}
-addLight(1, 0, 0, 1, 1, 1, 1);
+// let spread_distance = 50;
+// for (let i = 0; i < 500; i++) {
+//     addSphere(
+//         Math.random() * spread_distance - spread_distance / 2,
+//         Math.random() * spread_distance - spread_distance / 2,
+//         Math.random() * spread_distance - spread_distance / 2,
+//         Math.random() * 0.5 + 0.5,
+
+//         Math.random(),
+//         Math.random(),
+//         Math.random(),
+//         Math.random()
+//     );
+// }
+addLight(0, -20, 0, 1, 1, 1, 1);
 
 const previousDeltaTimes: number[] = [];
 

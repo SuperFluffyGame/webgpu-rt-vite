@@ -24,6 +24,13 @@ struct Camera {
     fov: f32,
 }
 
+struct Ray {
+    origin: vec4<f32>,
+    dir: vec4<f32>,
+    color: vec4<f32>,
+}
+
+
 
 @group(0) @binding(0) var<uniform> camera: Camera;
 @group(0) @binding(1) var<storage> spheres: array<Sphere>;
@@ -121,7 +128,7 @@ fn main(
         ) * camera.dir_mat
     );
 
-    var overall_color = vec4<f32>(1, 0, 0, 1);
+    var overall_color = vec4<f32>(0, 0, 0, 1);
     var ray_reflectiveness = 0.0;
 
     for(var i = 0; i < i32(options.ray_bounces) + 1; i++){
@@ -129,17 +136,8 @@ fn main(
         let sky_color = mix(sky_color1, sky_color2, 1 - ray_dir.y);
 
         let hit = get_closest_sphere(ray_origin, ray_dir, -1.0);
-        if( hit.t <= 0 ) {
-            color = sky_color;
-            if(i == 0){
-                overall_color = color;
-            } else {
-                overall_color = mix(overall_color, color, ray_reflectiveness);
-            }
-            break;
-        }
+        
         let sphere = spheres[i32(hit.index)];
-
         let hit_point = ray_origin + ray_dir * hit.t;
         let hit_normal = normalize(hit_point.xyz - sphere.pos.xyz);
 
@@ -148,14 +146,17 @@ fn main(
         let hit_by_light: f32 = is_occluded(light_pos, light_to_hit_normal, hit_point, i32(hit.index));
 
 
-
-        color = sphere.color;//vec4(vec3(sphere.reflectiveness), 1);
   
+        if( hit.t < 0.0 ) {
+            color = sky_color;
+        } else {
+            color = sphere.color; // * hit_by_light;
+        }
 
         if(i == 0){
             overall_color = color;
         } else {
-            overall_color = mix(overall_color, color, ray_reflectiveness);
+            overall_color = mix(overall_color, color, ray_reflectiveness );
         }
         
         ray_origin = hit_point;
@@ -164,6 +165,10 @@ fn main(
             ray_reflectiveness = sphere.reflectiveness;
         } else {
             ray_reflectiveness = ray_reflectiveness * sphere.reflectiveness;
+        }
+
+        if( hit.t < 0.0) {
+            break;
         }
 
     }
